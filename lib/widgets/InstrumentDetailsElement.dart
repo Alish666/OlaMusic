@@ -16,7 +16,7 @@ class InstrumentDetailsElement extends StatelessWidget {
       children: <Widget>[
         Stack(
           children: [
-            Image.network(instrument.url),
+            Image.network(instrument.url, fit: BoxFit.contain),
             Positioned(
               bottom: 25,
               right: 25,
@@ -74,131 +74,6 @@ class InstrumentDetailsElement extends StatelessWidget {
         SizedBox(
           height: 24,
         ),
-        Row(
-          children: <Widget>[
-            // ALL GESTURE DETECTORS SHOULD BE WORKING!! LOGIC REALIZATION..
-            Padding(
-              padding: EdgeInsets.only(left: 30),
-              child: GestureDetector(
-                child: Container(
-                  child: Text(
-                    "FC",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 30),
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(9)),
-                  padding:
-                      EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            GestureDetector(
-              child: Container(
-                child: Text(
-                  "S",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30),
-                ),
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(9)),
-                padding:
-                    EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-              ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            GestureDetector(
-              child: Container(
-                child: Text(
-                  "FR",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30),
-                ),
-                decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(9)),
-                padding:
-                    EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-              ),
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            GestureDetector(
-              child: Container(
-                child: Text(
-                  "NFR",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 30),
-                ),
-                decoration: BoxDecoration(
-                    color: Colors.pink[400],
-                    borderRadius: BorderRadius.circular(9)),
-                padding:
-                    EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-              ),
-            )
-          ],
-        ),
-        SizedBox(
-          height: 24,
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 30),
-              child: GestureDetector(
-                child: Container(
-                  child: Text(
-                    "Add To Cart",
-                    style: TextStyle(color: Colors.white, fontSize: 30),
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(9)),
-                  padding:
-                      EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(right: 30),
-              child: GestureDetector(
-                child: Container(
-                  child: Icon(
-                    Icons.star_border_outlined,
-                    color: Colors.black,
-                    size: 33,
-                  ),
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(9)),
-                  padding:
-                      EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
-                ),
-              ),
-            ),
-          ],
-        ),
-        SizedBox(
-          height: 30,
-        )
       ],
     );
   }

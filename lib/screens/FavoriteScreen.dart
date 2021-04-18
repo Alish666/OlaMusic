@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:olamusic/widgets/RecomendedList.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 
-class HomePageScreen extends StatelessWidget {
-  TextEditingController textController = TextEditingController();
-
+class FavoriteScreen extends StatelessWidget {
+  int n = 2;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,7 +28,7 @@ class HomePageScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Text(
-                    "Home",
+                    "Liked",
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -39,7 +36,7 @@ class HomePageScreen extends StatelessWidget {
                   ),
                   Container(
                     child: Text(
-                      "2",
+                      n.toString(),
                       style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
@@ -53,13 +50,6 @@ class HomePageScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 16,
-              ),
-              Padding(
-                child: RecomendedList(),
-                padding: EdgeInsets.only(left: 16, right: 16),
-              )
             ],
           ),
         ),

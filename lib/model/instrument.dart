@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class Instrument {
+class Instrument with ChangeNotifier {
   final String id;
   final String name;
   final String type;
@@ -8,13 +8,20 @@ class Instrument {
   final double weight;
   final String url;
   final String price;
+  bool isFavorite;
 
-  const Instrument(
+  Instrument(
       {@required this.id,
       @required this.name,
       @required this.type,
       @required this.color,
       @required this.weight,
       @required this.url,
-      @required this.price});
+      @required this.price,
+      this.isFavorite = false});
+
+  void changeFavorite() {
+    isFavorite = !isFavorite;
+    notifyListeners();
+  }
 }
