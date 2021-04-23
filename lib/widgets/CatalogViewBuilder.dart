@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:olamusic/model/data.dart';
 import 'package:olamusic/model/instrument.dart';
 import 'package:provider/provider.dart';
-
 import 'ProductItem.dart';
 
-class GridViewBuilder extends StatelessWidget {
-  final List<Instrument> catalog;
-  GridViewBuilder({this.catalog});
+class CatalogViewBuilder extends StatelessWidget {
+  final bool showLiked;
+  CatalogViewBuilder({this.showLiked});
   @override
   Widget build(BuildContext context) {
+    final _catalog = showLiked
+        ? Provider.of<Data>(context).favorites
+        : Provider.of<Data>(context).catalog;
     return GridView.builder(
       padding: const EdgeInsets.all(10),
-      itemCount: catalog.length,
+      itemCount: _catalog.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-        value: catalog[i],
+        value: _catalog[i],
         child: ProductItem(),
       ),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

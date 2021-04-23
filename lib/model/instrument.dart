@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class Instrument with ChangeNotifier {
   final String id;
   final String name;
+  final String family;
   final String type;
   final String color;
   final double weight;
@@ -18,6 +19,7 @@ class Instrument with ChangeNotifier {
       @required this.weight,
       @required this.url,
       @required this.price,
+      @required this.family,
       this.isFavorite = false});
 
   void changeFavorite() {

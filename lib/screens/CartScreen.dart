@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:olamusic/model/data.dart';
-import 'package:olamusic/widgets/GridViewBuilder.dart';
-import 'package:provider/provider.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
+  @override
+  _CartScreenState createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
-    final catalog = Provider.of<Data>(context).favoriteCatalog;
     return Scaffold(
       backgroundColor: Color.fromRGBO(249, 247, 243, 1),
       appBar: AppBar(
@@ -19,7 +20,6 @@ class CartScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: GridViewBuilder(catalog: catalog),
     );
   }
 }

@@ -13,6 +13,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final instrument = Provider.of<Instrument>(context, listen: true);
+
     return GestureDetector(
       onTap: () => pushNewScreenWithRouteSettings(
         context,
@@ -26,16 +27,31 @@ class ProductItem extends StatelessWidget {
         decoration: BoxDecoration(
             color: Colors.white, borderRadius: BorderRadius.circular(16)),
         child: Stack(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
           children: [
             Positioned(
-              child: FavoriteButton(
-                isFavorite: instrument.isFavorite,
-                valueChanged: (_) {
+              child: IconButton(
+                icon: instrument.isFavorite
+                    ? Icon(
+                        Icons.star,
+                        size: 28,
+                        color: Colors.yellow[600],
+                      )
+                    : Icon(
+                        Icons.star,
+                        size: 28,
+                        color: Colors.grey,
+                      ),
+                onPressed: () {
                   instrument.changeFavorite();
-                  print(instrument.isFavorite);
+                  if (instrument.isFavorite) {
+                    Provider.of<Data>(context, listen: false)
+                        .addToStarred(instrument.id);
+                  } else {
+                    Provider.of<Data>(context, listen: false)
+                        .deleteFromStarred(instrument.id);
+                  }
                 },
-                iconSize: 40,
-                iconColor: Color.fromRGBO(171, 68, 68, 1),
               ),
               right: 10,
               top: 10,
