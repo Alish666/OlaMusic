@@ -10,7 +10,7 @@ class CatalogViewBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _catalog = showLiked
-        ? Provider.of<Data>(context).favorites
+        ? Provider.of<Data>(context).starred
         : Provider.of<Data>(context).catalog;
     return GridView.builder(
       padding: const EdgeInsets.all(10),

@@ -9,21 +9,15 @@ class Instrument with ChangeNotifier {
   final double weight;
   final String url;
   final String price;
-  bool isFavorite;
 
-  Instrument(
-      {@required this.id,
-      @required this.name,
-      @required this.type,
-      @required this.color,
-      @required this.weight,
-      @required this.url,
-      @required this.price,
-      @required this.family,
-      this.isFavorite = false});
-
-  void changeFavorite() {
-    isFavorite = !isFavorite;
-    notifyListeners();
-  }
+  Instrument({
+    @required this.id,
+    @required this.name,
+    @required this.type,
+    @required this.color,
+    @required this.weight,
+    @required this.url,
+    @required this.price,
+    @required this.family,
+  });
 }

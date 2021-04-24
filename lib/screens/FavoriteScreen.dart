@@ -1,7 +1,10 @@
 import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:olamusic/model/data.dart';
+import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:provider/provider.dart';
+
+import 'InstrumentDetailScreen.dart';
 
 class FavoriteScreen extends StatefulWidget {
   @override
@@ -27,30 +30,26 @@ class _FavoriteScreenState extends State<FavoriteScreen> {
       body: ListView.builder(
         itemCount: data.starred.length,
         itemBuilder: (ctx, i) => ListTile(
+          onTap: () => pushNewScreenWithRouteSettings(
+            context,
+            screen: InstrumentDetailScreen(),
+            withNavBar: true,
+            pageTransitionAnimation: PageTransitionAnimation.cupertino,
+            settings: RouteSettings(
+                name: '/InstrumentDetailScreen', arguments: data.starred[i].id),
+          ),
           leading: CircleAvatar(
             child: Text(data.starred[i].id),
           ),
           title: Text(data.starred[i].name),
           trailing: IconButton(
-            icon: data.catalog[i].isFavorite
-                ? Icon(
-                    Icons.star,
-                    size: 28,
-                    color: Colors.yellow[600],
-                  )
-                : Icon(
-                    Icons.star,
-                    size: 28,
-                    color: Colors.grey,
-                  ),
+            icon: Icon(
+              Icons.star,
+              size: 28,
+              color: Colors.yellow[600],
+            ),
             onPressed: () {
-              data.catalog[i].changeFavorite();
-              if (data.catalog[i].isFavorite &&
-                  !data.isInList(data.catalog[i].id)) {
-                data.addToStarred(data.catalog[i].id);
-              } else {
-                data.deleteFromStarred(data.catalog[i].id);
-              }
+              data.deleteFromStarred(data.starred[i]);
             },
           ),
         ),

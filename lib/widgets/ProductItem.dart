@@ -13,7 +13,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final instrument = Provider.of<Instrument>(context, listen: true);
-
+    final data = Provider.of<Data>(context);
     return GestureDetector(
       onTap: () => pushNewScreenWithRouteSettings(
         context,
@@ -31,7 +31,7 @@ class ProductItem extends StatelessWidget {
           children: [
             Positioned(
               child: IconButton(
-                icon: instrument.isFavorite
+                icon: data.starred.contains(instrument)
                     ? Icon(
                         Icons.star,
                         size: 28,
@@ -43,13 +43,10 @@ class ProductItem extends StatelessWidget {
                         color: Colors.grey,
                       ),
                 onPressed: () {
-                  instrument.changeFavorite();
-                  if (instrument.isFavorite) {
-                    Provider.of<Data>(context, listen: false)
-                        .addToStarred(instrument.id);
+                  if (data.starred.contains(instrument)) {
+                    data.deleteFromStarred(instrument);
                   } else {
-                    Provider.of<Data>(context, listen: false)
-                        .deleteFromStarred(instrument.id);
+                    data.addToStarred(instrument);
                   }
                 },
               ),

@@ -15,7 +15,7 @@ class InstrumentDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.white.withOpacity(0),
         title: Center(
           child: Text(
             "oLA",
