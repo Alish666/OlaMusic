@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:olamusic/screens/InstrumentDetailScreen.dart';
 import '../model/instrument.dart';
 import '../model/data.dart';
-import 'package:favorite_button/favorite_button.dart';
 import 'package:provider/provider.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
@@ -70,7 +69,7 @@ class ProductItem extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(left: 25),
                   child: Text(
-                    "\$" + instrument.price,
+                    "\$" + instrument.price.toString(),
                     style: TextStyle(
                         color: Colors.green[800],
                         fontSize: 25,

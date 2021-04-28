@@ -54,7 +54,7 @@ class InstrumentDetailsElement extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 30, right: 30),
           child: Text(
-            "\$" + instrument.price,
+            "\$" + instrument.price.toString(),
             style: TextStyle(
                 color: Colors.green[700],
                 fontSize: 28,
@@ -72,7 +72,7 @@ class InstrumentDetailsElement extends StatelessWidget {
           ),
         ),
         SizedBox(
-          height: 24,
+          height: 78,
         ),
       ],
     );

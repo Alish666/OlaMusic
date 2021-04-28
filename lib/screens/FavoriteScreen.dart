@@ -1,4 +1,3 @@
-import 'package:favorite_button/favorite_button.dart';
 import 'package:flutter/material.dart';
 import 'package:olamusic/model/data.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';

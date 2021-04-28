@@ -4,19 +4,20 @@ import 'package:olamusic/model/instrument.dart';
 import 'package:provider/provider.dart';
 import 'ProductItem.dart';
 
-class CatalogViewBuilder extends StatelessWidget {
-  final bool showLiked;
-  CatalogViewBuilder({this.showLiked});
+class CatalogViewBuilder extends StatefulWidget {
+  @override
+  _CatalogViewBuilderState createState() => _CatalogViewBuilderState();
+}
+
+class _CatalogViewBuilderState extends State<CatalogViewBuilder> {
   @override
   Widget build(BuildContext context) {
-    final _catalog = showLiked
-        ? Provider.of<Data>(context).starred
-        : Provider.of<Data>(context).catalog;
+    final catalogData = Provider.of<Data>(context);
     return GridView.builder(
       padding: const EdgeInsets.all(10),
-      itemCount: _catalog.length,
+      itemCount: catalogData.catalog.length,
       itemBuilder: (ctx, i) => ChangeNotifierProvider.value(
-        value: _catalog[i],
+        value: catalogData.catalog[i],
         child: ProductItem(),
       ),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

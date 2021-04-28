@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:olamusic/model/data.dart';
 import 'package:olamusic/widgets/CatalogViewBuilder.dart';
 import 'package:olamusic/widgets/ProductItem.dart';
+import 'package:provider/provider.dart';
 import '../model/instrument.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -9,13 +11,27 @@ class ProductsOverviewScreen extends StatefulWidget {
   _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
 }
 
-enum Options {
-  Liked,
-  Catalog,
-}
-
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
-  dynamic _showLiked = false;
+  var _isInit = true; // CHANGE THE VARIABLE
+  var _isLoading = false; // CHANGE THE VARIABLE
+
+  @override
+  void didChangeDependencies() {
+    // CHANGE THE METHOD
+    if (_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      Provider.of<Data>(context).dataSetFromServer().then((_) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,37 +45,10 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
           ),
         ),
         elevation: 0,
-        actions: [
-          PopupMenuButton(
-            onSelected: (Options chosenOption) {
-              setState(() {
-                if (chosenOption == Options.Liked) {
-                  _showLiked = true;
-                } else {
-                  _showLiked = false;
-                }
-              });
-            },
-            icon: Icon(
-              Icons.more_vert,
-              color: Colors.black,
-            ),
-            itemBuilder: (_) => [
-              PopupMenuItem(
-                child: Text("Liked"),
-                value: Options.Liked,
-              ),
-              PopupMenuItem(
-                child: Text("Catalog"),
-                value: Options.Catalog,
-              ),
-            ],
-          ),
-        ],
       ),
-      body: CatalogViewBuilder(
-        showLiked: _showLiked,
-      ),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : CatalogViewBuilder(),
     );
   }
 }

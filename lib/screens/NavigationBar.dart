@@ -1,13 +1,14 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:awesome_bottom_navigation/awesome_bottom_navigation.dart';
+import 'package:olamusic/model/basket.dart';
 import 'package:olamusic/screens/CartScreen.dart';
 import 'package:olamusic/screens/HomePageScreen.dart';
 import 'package:olamusic/screens/InstrumentDetailScreen.dart';
 import 'package:olamusic/screens/ProductsOverviewScreen.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 import 'package:badges/badges.dart';
+import 'package:provider/provider.dart';
 import 'FavoriteScreen.dart';
 import 'ProfileAuthScreen.dart';
 
@@ -17,20 +18,17 @@ class NavigationBar extends StatefulWidget {
 }
 
 class _NavigationBarState extends State<NavigationBar> {
-  PersistentTabController _controller =
-      PersistentTabController(initialIndex: 0);
-
   List<Widget> _buildScreens() {
     return [
       HomePageScreen(),
       ProductsOverviewScreen(),
       FavoriteScreen(),
       ProfileAuthScreen(),
-      CartScreen()
+      CartScreen(),
     ];
   }
 
-  List<PersistentBottomNavBarItem> _navBarsItems() {
+  List<PersistentBottomNavBarItem> _navBarsItems(BuildContext context) {
     return [
       PersistentBottomNavBarItem(
         textStyle: TextStyle(fontSize: 15),
@@ -76,7 +74,7 @@ class _NavigationBarState extends State<NavigationBar> {
           animationType: BadgeAnimationType.fade,
           child: Icon(Icons.shopping_cart),
           badgeContent: Text(
-            '3', // change later
+            Provider.of<Basket>(context).basketCount.toString(),
             style: TextStyle(color: Colors.white),
           ),
         ),
@@ -90,13 +88,16 @@ class _NavigationBarState extends State<NavigationBar> {
 
   @override
   Widget build(BuildContext context) {
+    PersistentTabController _controller =
+        Provider.of<Basket>(context).controller;
     return PersistentTabView(
       context,
       navBarHeight: 65,
+      stateManagement: true,
       backgroundColor: Colors.black,
       controller: _controller,
       screens: _buildScreens(),
-      items: _navBarsItems(),
+      items: _navBarsItems(context),
       confineInSafeArea: true,
       resizeToAvoidBottomInset: true,
       decoration: NavBarDecoration(

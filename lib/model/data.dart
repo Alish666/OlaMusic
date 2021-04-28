@@ -1,48 +1,64 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:olamusic/model/instrument.dart';
 import 'instrument.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Data with ChangeNotifier {
-  List<Instrument> _catalog = [
-    Instrument(
-        color: "black",
-        id: "a1",
-        name: "The Piano",
-        family: "K",
-        type: "Keyboard Piano",
-        url: "https://i.ibb.co/dJKfCxL/unnamed.png",
-        weight: 144.6,
-        price: '850'),
-    Instrument(
-        color: "red",
-        id: "a2",
-        name: "Fender R13",
-        family: "S",
-        type: "Electric Guitar",
-        url: "https://i.ibb.co/xjzRRpt/1.png",
-        weight: 22.3,
-        price: '1300'),
-    Instrument(
-        family: "S",
-        color: "brown",
-        id: "a3",
-        name: "The Violin",
-        type: "Orchestra",
-        url: "https://i.ibb.co/LtWJzsk/unnamed-1.png",
-        weight: 11.73,
-        price: '150')
-  ];
+  List<Instrument> _catalog = [];
   List<Instrument> _starred = [];
 
-  void addToStarred(Instrument instrument) {
-    _starred.add(instrument);
+  Future<void> dataSetFromServer() async {
+    List<Instrument> list = [];
+    final respons = await http.get(Uri.parse(
+        'https://olamusic-default-rtdb.firebaseio.com/instruments.json'));
+
+    final convertedData = json.decode(respons.body) as Map<String, dynamic>;
+    if (convertedData == null) {
+      return;
+    }
+
+    convertedData.forEach((id, instrument) {
+      list.add(
+        Instrument(
+            id: id,
+            name: instrument['name'],
+            type: instrument['type'],
+            color: instrument['color'],
+            weight: instrument['weight'],
+            url: instrument['url'],
+            price: instrument['price'],
+            family: instrument['family'],
+            overallQuantity: instrument['overallQuantity']),
+      );
+    });
+    _catalog = list;
     notifyListeners();
   }
 
-  void deleteFromStarred(Instrument instrument) {
+  Future<void> addToStarred(Instrument instrument) async {
+    _starred.add(instrument);
+    notifyListeners();
+    String instrumentId = instrument.id;
+    String userdId = FirebaseAuth.instance.currentUser.uid;
+    String token = await FirebaseAuth.instance.currentUser.getIdToken();
+    final url =
+        "https://olamusic-default-rtdb.firebaseio.com/users/$userdId/favorites/$instrumentId.json";
+
+    await http.post(Uri.parse(url), body: json.encode({'isFavorite': true}));
+  }
+
+  Future<void> deleteFromStarred(Instrument instrument) async {
     _starred.remove(instrument);
     notifyListeners();
+    String instrumentId = instrument.id;
+    String userdId = FirebaseAuth.instance.currentUser.uid;
+    final url =
+        "https://olamusic-default-rtdb.firebaseio.com/users/$userdId/favorites/$instrumentId.json";
+
+    await http.delete(Uri.parse(url));
   }
 
   List<Instrument> get starred {

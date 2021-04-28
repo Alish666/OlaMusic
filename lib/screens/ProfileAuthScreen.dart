@@ -1,6 +1,6 @@
+import 'package:animated_button/animated_button.dart';
 import 'package:flutter/material.dart';
 import 'package:olamusic/widgets/RecomendedList.dart';
-import 'package:material_floating_search_bar/material_floating_search_bar.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -10,120 +10,227 @@ class ProfileAuthScreen extends StatefulWidget {
 }
 
 class _ProfileAuthScreenState extends State<ProfileAuthScreen> {
-  String _imageUrl;
-
+  TextEditingController emailController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController confirmPasswordController = new TextEditingController();
+  bool showLogIn = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color.fromRGBO(249, 247, 243, 1),
-      appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Color.fromRGBO(249, 247, 243, 1),
-        title: Center(
-          child: Text(
-            "oLA",
-            style: TextStyle(color: Colors.black),
-          ),
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 8,
+      body: isAuth(context)
+          ? Center(
+              child: Text(
+                FirebaseAuth.instance.currentUser.email,
+                style: TextStyle(color: Colors.black),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            )
+          : Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
                 children: <Widget>[
-                  Text(
-                    "Home",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 36),
+                  SizedBox(
+                    height: 50,
                   ),
-                  Container(
+                  Text(
+                    "Login to your account",
+                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Email address'),
+                    keyboardType: TextInputType.emailAddress,
+                    obscureText: false,
+                    controller: emailController,
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  TextFormField(
+                    decoration: InputDecoration(labelText: 'Password'),
+                    keyboardType: TextInputType.visiblePassword,
+                    obscureText: true,
+                    controller: passwordController,
+                  ),
+                  showLogIn
+                      ? logInWidget(context)
+                      : registerWidget(context, confirmPasswordController),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      FirebaseAuth.instance.signOut();
+                    },
                     child: Text(
-                      "2",
+                      'SIGN OUT',
                       style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 30),
+                        fontSize: 16,
+                        color: Color.fromRGBO(255, 188, 44, 1),
+                      ),
                     ),
-                    decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(9)),
-                    padding:
-                        EdgeInsets.only(left: 16, right: 16, top: 8, bottom: 8),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 16,
-              ),
-              Padding(
-                child: RecomendedList(),
-                padding: EdgeInsets.only(left: 16, right: 16),
-              ),
-              TextButton(
-                style: TextButton.styleFrom(backgroundColor: Colors.teal[700]),
-                onPressed: () => _googleSignIn(),
-                child: Text(
-                  "Sign in with Google",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-              (_imageUrl == null || _imageUrl.isEmpty)
-                  ? CircularProgressIndicator()
-                  : Image.network(_imageUrl),
-              TextButton(
-                style: TextButton.styleFrom(backgroundColor: Colors.teal[700]),
-                onPressed: () async {
-                  await FirebaseAuth.instance.signOut().then((value) {
-                    setState(() {
-                      _imageUrl = null;
-                    });
-                  });
-
-                  print(_imageUrl);
-                },
-                child: Text(
-                  "Sign out",
-                  style: TextStyle(color: Colors.white),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 
-  Future<UserCredential> _googleSignIn() async {
-    final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    // Trigger the authentication flow
-    final GoogleSignInAccount googleUser = await GoogleSignIn().signIn();
-
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication googleAuth =
-        await googleUser.authentication;
-
-    // Create a new credential
-    final GoogleAuthCredential credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth.accessToken,
-      idToken: googleAuth.idToken,
+  Widget logInWidget(BuildContext context) {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 16,
+        ),
+        AnimatedButton(
+          onPressed: () async {
+            try {
+              UserCredential userCredential = await FirebaseAuth.instance
+                  .signInWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text);
+            } on FirebaseAuthException catch (e) {
+              if (e.code == 'user-not-found') {
+                print('No user found for that email.');
+              } else if (e.code == 'wrong-password') {
+                print('Wrong password provided for that user.');
+              }
+            }
+            FirebaseAuth.instance.authStateChanges().listen((User user) {
+              if (user == null) {
+                print('no!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+              } else {
+                print('YYYYYYYEEEEEEEEEEEEEEEEEEEEEEEESSSSSSSSSSSS!!!!!!!!!!!');
+              }
+            });
+            setState(() {
+              emailController.clear();
+              passwordController.clear();
+            });
+          },
+          child: Text(
+            "LOG IN",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          height: 60,
+          width: 375,
+          color: Color.fromRGBO(255, 188, 44, 1),
+        ),
+        SizedBox(
+          height: 16,
+        ),
+        Row(
+          children: <Widget>[
+            Text(
+              "Don't have an account?",
+              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            ),
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    showLogIn = false;
+                    emailController.clear();
+                    passwordController.clear();
+                  });
+                },
+                child: Text(
+                  "Sign Up",
+                  style: TextStyle(
+                      fontSize: 16, color: Color.fromRGBO(255, 188, 44, 1)),
+                ))
+          ],
+        )
+      ],
     );
-    final firebaseInstance =
-        await firebaseAuth.signInWithCredential(credential);
-    print(firebaseInstance.user.uid.toString());
-    setState(() {
-      _imageUrl = firebaseInstance.user.photoURL;
-    });
-    print(_imageUrl);
+  }
 
-    // Once signed in, return the UserCredential
-    return firebaseInstance;
+  Widget registerWidget(
+      BuildContext context, TextEditingController textEditingController) {
+    return Column(
+      children: <Widget>[
+        SizedBox(
+          height: 5,
+        ),
+        TextFormField(
+          decoration: InputDecoration(labelText: 'Confirm Password'),
+          keyboardType: TextInputType.visiblePassword,
+          obscureText: true,
+          controller: textEditingController,
+        ),
+        SizedBox(
+          height: 16,
+        ),
+        AnimatedButton(
+          onPressed: () async {
+            try {
+              UserCredential userCredential = await FirebaseAuth.instance
+                  .createUserWithEmailAndPassword(
+                      email: emailController.text,
+                      password: passwordController.text);
+            } on FirebaseAuthException catch (e) {
+              if (e.code == 'weak-password') {
+                print('The password provided is too weak.');
+              } else if (e.code == 'email-already-in-use') {
+                print('The account already exists for that email.');
+              }
+            } catch (e) {
+              print(e);
+            }
+            setState(() {
+              emailController.clear();
+              passwordController.clear();
+            });
+          },
+          child: Text(
+            "REGISTER",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          height: 60,
+          width: 375,
+          color: Color.fromRGBO(255, 188, 44, 1),
+        ),
+        Row(
+          children: <Widget>[
+            Text(
+              "Already have an account?",
+              style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+            ),
+            TextButton(
+                onPressed: () {
+                  setState(() {
+                    showLogIn = true;
+                    emailController.clear();
+                    passwordController.clear();
+                  });
+                },
+                child: Text(
+                  "Sign In",
+                  style: TextStyle(
+                      fontSize: 16, color: Color.fromRGBO(255, 188, 44, 1)),
+                ))
+          ],
+        )
+      ],
+    );
+  }
+
+  bool isAuth(BuildContext context) {
+    FirebaseAuth.instance.authStateChanges().listen((User user) {
+      if (user == null) {
+        return false;
+      } else {
+        return true;
+      }
+    });
+    return false;
   }
 }

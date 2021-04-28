@@ -6,6 +6,7 @@ import 'package:olamusic/screens/InstrumentDetailScreen.dart';
 import 'package:olamusic/screens/ProductsOverviewScreen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/cupertino.dart';
+import 'model/basket.dart';
 import 'screens/CartScreen.dart';
 import 'screens/FavoriteScreen.dart';
 import 'screens/NavigationBar.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (ctx) => Data()),
+        ChangeNotifierProvider(create: (ctx) => Basket())
       ],
       child: MaterialApp(
         home: NavigationBar(),
@@ -35,7 +37,8 @@ class MyApp extends StatelessWidget {
           '/ProductsOverviewScreen': (context) => ProductsOverviewScreen(),
           '/FavoriteScreen': (context) => FavoriteScreen(),
           '/ProfileAuthScreen': (context) => ProfileAuthScreen(),
-          '/CartScreen': (context) => CartScreen()
+          '/CartScreen': (context) => CartScreen(),
+          '/NavigationBar': (context) => NavigationBar()
         },
       ),
     );
