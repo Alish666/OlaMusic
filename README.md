@@ -1,6 +1,6 @@
-# olamusic
+Check OlaMusic2 - https://github.com/Alish666/OlaMusic2
+Continuation of project over there!
 
-A new Flutter project.
 
 ## Getting Started
 
